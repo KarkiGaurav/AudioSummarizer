@@ -15,7 +15,7 @@ export default function AudioSummarizer() {
   const [progress, setProgress] = useState(0);
   const [error, setError] = useState<string | null>(null);
 
-  // Handle file selection
+
   const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const selectedFile = event.target.files?.[0];
     if (selectedFile) {
@@ -77,7 +77,6 @@ export default function AudioSummarizer() {
         }
       }
 
-      // Step 3: Convert summary text into audio using OpenAI TTS API
       const ttsResponse = await fetch('/api/tts', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },

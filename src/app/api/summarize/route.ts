@@ -70,9 +70,15 @@ export async function POST(req: NextRequest) {
       const customReadable = new ReadableStream({
         async start(controller) {
           try {
+            let completeContent = ''; 
             for await (const chunk of stream) {
               const content = chunk.choices[0]?.delta?.content || '';
+              console.log('Chunk content:', content); 
+              completeContent += content;
               controller.enqueue(encoder.encode(content));
+            }
+            if (!completeContent.trim()) {
+              console.error('Empty summary generated');
             }
             controller.close();
           } catch (error) {
@@ -82,7 +88,7 @@ export async function POST(req: NextRequest) {
         },
       });
 
-      console.log('Summarization completed');
+      console.log('Summarization completed==>', customReadable);
       return new NextResponse(customReadable, {
         headers: { 'Content-Type': 'text/plain; charset=utf-8' },
       });

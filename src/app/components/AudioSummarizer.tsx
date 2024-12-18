@@ -68,15 +68,25 @@ export default function AudioSummarizer() {
         while (!done) {
           const { value, done: streamDone } = await reader.read();
           const chunk = decoder.decode(value, { stream: true });
-          const [progressStr, summaryChunk] = chunk.split(':', 2);
+          console.log('Raw chunk from stream:', chunk);
+          // const [progressStr, summaryChunk] = chunk.split(':', 2);
+          // console.log('Parsed progress:', progressStr, 'Parsed summaryChunk:', summaryChunk); // Add this log
 
-          setProgress(parseInt(progressStr));
-          finalSummary += summaryChunk || '';
-          setSummary(finalSummary);
+          // setProgress(parseInt(progressStr));
+          // finalSummary += summaryChunk || '';
+          // setSummary(finalSummary);
+          // done = streamDone;
+
+          finalSummary += chunk;
+          setSummary(finalSummary); // Update summary in real-time
           done = streamDone;
         }
       }
 
+      if (!finalSummary.trim()) {
+        throw new Error('Failed to generate summary.');
+      }
+      // console.log('Final summary:', finalSummary); 
       const ttsResponse = await fetch('/api/tts', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },

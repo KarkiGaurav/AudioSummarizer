@@ -9,6 +9,7 @@ export async function POST(req: NextRequest) {
   try {
     const { text } = await req.json();
 
+    console.log("text-===>", text)
     const response = await openai.audio.speech.create({
       model: 'tts-1',
       voice: 'alloy', // Choose from: alloy, echo, fable, onyx, shimmer
